@@ -2,3 +2,4 @@ audio-metadata
 pydub
 spotipy
 csv
+pandas
