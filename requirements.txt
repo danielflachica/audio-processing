@@ -3,3 +3,4 @@ pydub
 spotipy
 csv
 pandas
+openpyxl
