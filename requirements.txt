@@ -1,5 +1,4 @@
 audio-metadata
 pydub
 spotipy
-tkinter
-tksheet
+csv
