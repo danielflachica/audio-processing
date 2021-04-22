@@ -1,0 +1,3 @@
+audio-metadata
+pydub
+spotipy
