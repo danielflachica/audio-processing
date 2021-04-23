@@ -3,16 +3,7 @@ import sys
 import os
 import csv
 import pandas as pd
-
-
-def convert_seconds_to_minutes(seconds):
-	mins = seconds / 60
-	secs = seconds % 60
-	return "%02d:%02d" % (mins, secs)
-
-
-def convert_bytes_to_megabytes(bytes):
-	return '{:.1f} MB'.format(bytes * 0.000001)
+import audio_utils as au
 
 
 # Returns a list of dictionaries containing metadata for each track in the given input list of files
@@ -23,8 +14,8 @@ def get_track_data(track_list, filepath):
 
 		track_dict = {
 			"name": track,
-			"size": convert_bytes_to_megabytes(metadata['filesize']),
-			"duration": convert_seconds_to_minutes(metadata['streaminfo'].duration),
+			"size": au.convert_bytes_to_megabytes(metadata['filesize']),
+			"duration": au.convert_seconds_to_minutes(metadata['streaminfo'].duration),
 			"sample_rate": "{:,} hz".format(metadata['streaminfo'].sample_rate),
 		}
 		
@@ -52,22 +43,30 @@ def convert_csv_to_xlsx(csv, outfile="out.xlsx"):
 if __name__=="__main__":
 	file_path_args = sys.argv[1:] # the first argument is the script itself
 
-	if len(file_path_args) > 1:
-		print('Error: More thah 1 argument was supplied')
+	if len(file_path_args) > 2:
+		print('Error: More thah 2 arguments were supplied')
 		exit()
-	else:
+	elif len(file_path_args) > 1:
+		fpath = file_path_args[0]
+		outfile = file_path_args[1]
+	elif len(file_path_args) > 0:
 		# convert arg into string
 		fpath = ' '.join(file_path_args)
+	else:
+		print("Error: No input argument was supplied")
+		exit()
 
 	# get a list of the files inside the given directory
-	flist = os.listdir(fpath if len(file_path_args) > 0 else None)
+	# flist = os.listdir(fpath if len(file_path_args) > 0 else None)
+	flist = os.listdir(fpath)
 
 	# extract audio data from file list
 	audio_data = get_track_data(flist, fpath)
 
 	# output audio data to a csv file
 	headers = ['name', 'size', 'duration', 'sample_rate']
-	write_to_csv(headers, audio_data)
+	write_to_csv(headers, audio_data, outfile+'.csv' if len(file_path_args) == 2 else 'out.csv')
 
 	# convert csv to excel file and open
-	convert_csv_to_xlsx('out.csv')
+	convert_csv_to_xlsx(outfile+'.csv' if len(file_path_args) == 2 else 'out.csv',
+		outfile+'.xlsx' if len(file_path_args) == 2 else 'out.xlsx')
