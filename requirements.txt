@@ -1,6 +1,7 @@
 audio-metadata
 pydub
-spotipy
 csv
 pandas
 openpyxl
+librosa
+soundfile
