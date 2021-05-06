@@ -3,4 +3,5 @@
 *.xlsx
 mp3/*
 wav/*
+wav_*/*
 __pycache__/
